@@ -1,14 +1,22 @@
 
   const quoteInput = document.getElementById('quoteInput');
-  const categoryInput = document.getElementById('authorInput'); // renamed input used for category
+  const categoryInput = document.getElementById('authorInput'); // used for category
   const addQuoteBtn = document.getElementById('addQuoteBtn');
   const quoteList = document.getElementById('quoteList');
+
+  // Create "Show Random Quote" button dynamically
+  const randomBtn = document.createElement('button');
+  randomBtn.textContent = "Show Random Quote";
+  randomBtn.id = "randomBtn";
+  randomBtn.style.marginTop = "10px";
+  quoteList.parentElement.insertBefore(randomBtn, quoteList);
 
   // Load quotes when page opens
   window.onload = displayQuotes;
 
-  // Add quote event
+  // Add event listeners
   addQuoteBtn.addEventListener('click', addQuote);
+  randomBtn.addEventListener('click', showRandomQuote);
 
   function addQuote() {
     const text = quoteInput.value.trim();
@@ -66,9 +74,27 @@
     });
   }
 
+  // ✅ Function to display a random quote from localStorage
+  function showRandomQuote() {
+    const keys = Object.keys(localStorage).filter(k => k.startsWith('quote_'));
+
+    if (keys.length === 0) {
+      alert('No quotes available yet.');
+      return;
+    }
+
+    // Use Math.random() to pick a random quote
+    const randomIndex = Math.floor(Math.random() * keys.length);
+    const randomKey = keys[randomIndex];
+    const randomQuote = JSON.parse(localStorage.getItem(randomKey));
+
+    alert(`"${randomQuote.text}" — ${randomQuote.category}`);
+  }
+
   function removeQuote(event) {
     const key = event.target.getAttribute('data-key');
     localStorage.removeItem(key);
     displayQuotes(); // Refresh list
   }
+
 
