@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Favorite Quotes App</title>
+  <title>Dynamic Quote Generator</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -18,11 +18,11 @@
       background: white;
       padding: 20px 30px;
       border-radius: 12px;
-      width: 400px;
+      width: 450px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
-    h2 {
+    h1, h2 {
       text-align: center;
       color: #333;
     }
@@ -47,53 +47,51 @@
       background: #0056b3;
     }
 
-    .quote-list {
+    #quoteDisplay {
       margin-top: 15px;
-    }
-
-    .quote-item {
+      padding: 15px;
       background: #eef2f7;
-      padding: 10px;
-      margin-bottom: 10px;
       border-radius: 8px;
-      position: relative;
-    }
-
-    .quote-item span {
-      display: block;
+      text-align: center;
       font-style: italic;
     }
 
-    .remove-btn {
-  background: #dc3545;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 8px;
-  align-self: flex-end;
-}
+    #quoteDisplay strong {
+      display: block;
+      margin-top: 5px;
+      color: #333;
+    }
 
+    .file-actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
 
-    .remove-btn:hover {
-      background: #b52a37;
+    .file-actions button {
+      width: 48%;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Favorite Quotes</h2>
-    
-    <input type="text" id="quoteInput" placeholder="Enter your favorite quote">
-    <input type="text" id="authorInput" placeholder="Enter author name">
+    <h1>Dynamic Quote Generator</h1>
+
+    <div id="quoteDisplay">Click "Show New Quote" to begin.</div>
+    <button id="newQuote">Show New Quote</button>
+
+    <h2>Add a New Quote</h2>
+    <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
+    <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
     <button id="addQuoteBtn">Add Quote</button>
 
-    <div id="quoteList" class="quote-list"></div>
+    <div class="file-actions">
+      <button id="exportBtn">Export JSON</button>
+      <input type="file" id="importFile" accept=".json" onchange="importFromJsonFile(event)" />
+    </div>
   </div>
 
-  <script src="script.js">
-   
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
+
