@@ -50,7 +50,7 @@ function saveQuotes() {
   localStorage.setItem("quotes", JSON.stringify(quotes));
 }
 
-// ✅ Export quotes as JSON file
+// ✅ Export quotes as JSON file (function name fixed)
 function exportToJsonFile() {
   const dataStr = JSON.stringify(quotes, null, 2);
   const blob = new Blob([dataStr], { type: "application/json" });
@@ -64,7 +64,7 @@ function exportToJsonFile() {
   URL.revokeObjectURL(url);
 }
 
-// ✅ Import quotes from a JSON file
+// ✅ Import quotes from JSON file
 function importFromJsonFile(event) {
   const fileReader = new FileReader();
   fileReader.onload = function (e) {
@@ -85,7 +85,7 @@ function importFromJsonFile(event) {
   fileReader.readAsText(event.target.files[0]);
 }
 
-// ✅ Restore last viewed quote (from sessionStorage)
+// ✅ Restore last viewed quote from sessionStorage
 function loadLastViewedQuote() {
   const lastQuote = sessionStorage.getItem("lastQuote");
   if (lastQuote) {
@@ -105,3 +105,4 @@ document.getElementById("exportBtn").addEventListener("click", exportToJsonFile)
 window.onload = function () {
   loadLastViewedQuote();
 };
+
