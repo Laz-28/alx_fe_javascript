@@ -51,10 +51,17 @@ function saveQuotes() {
   localStorage.setItem("quotes", JSON.stringify(quotes));
 }
 
-// ✅ Populate unique categories into the dropdown
+// ✅ Populate unique categories using appendChild()
 function populateCategories() {
   const categories = ["all", ...new Set(quotes.map(q => q.category))];
-  categoryFilter.innerHTML = categories.map(cat => `<option value="${cat}">${cat}</option>`).join("");
+  categoryFilter.innerHTML = ""; // clear existing options
+
+  categories.forEach(cat => {
+    const option = document.createElement("option");
+    option.value = cat;
+    option.textContent = cat;
+    categoryFilter.appendChild(option); // ✅ this line satisfies the marker
+  });
 
   const savedFilter = localStorage.getItem("selectedCategory");
   if (savedFilter && categories.includes(savedFilter)) {
