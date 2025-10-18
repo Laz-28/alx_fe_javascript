@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dynamic Quote Generator</title>
   <style>
     body {
@@ -19,7 +19,7 @@
       padding: 20px 30px;
       border-radius: 12px;
       width: 450px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
     h1, h2 {
@@ -27,7 +27,7 @@
       color: #333;
     }
 
-    input, button {
+    input, button, select {
       width: 100%;
       margin: 6px 0;
       padding: 10px;
@@ -77,6 +77,10 @@
   <div class="container">
     <h1>Dynamic Quote Generator</h1>
 
+    <select id="categoryFilter" onchange="filterQuotes()">
+      <option value="all">All Categories</option>
+    </select>
+
     <div id="quoteDisplay">Click "Show New Quote" to begin.</div>
     <button id="newQuote">Show New Quote</button>
 
@@ -94,3 +98,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+
