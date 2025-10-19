@@ -168,7 +168,7 @@ async function syncQuotes() {
     quotes = merged;
     saveQuotes();
     populateCategories();
-    showNotification("Quotes synced with server (server data prioritized).");
+    showNotification("Quotes synced with server!");
   }
 }
 
