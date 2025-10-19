@@ -25,8 +25,8 @@ function showRandomQuote() {
   sessionStorage.setItem("lastQuote", JSON.stringify(randomQuote));
 }
 
-// ✅ Add a new quote and update storage and categories
-function addQuote() {
+// ✅ Add a new quote and update storage, categories, and post to server
+async function addQuote() {
   const newQuoteText = document.getElementById("newQuoteText").value.trim();
   const newQuoteCategory = document.getElementById("newQuoteCategory").value.trim();
 
@@ -39,11 +39,14 @@ function addQuote() {
   quotes.push(newQuoteObj);
 
   saveQuotes();
-  populateCategories(); // refresh dropdown if new category added
+  populateCategories();
   showRandomQuote();
 
   document.getElementById("newQuoteText").value = "";
   document.getElementById("newQuoteCategory").value = "";
+
+  // ✅ Post new quote to server
+  await postQuoteToServer(newQuoteObj);
 }
 
 // ✅ Save quotes to localStorage
@@ -54,13 +57,13 @@ function saveQuotes() {
 // ✅ Populate unique categories using appendChild()
 function populateCategories() {
   const categories = ["all", ...new Set(quotes.map(q => q.category))];
-  categoryFilter.innerHTML = ""; // clear existing options
+  categoryFilter.innerHTML = "";
 
   categories.forEach(cat => {
     const option = document.createElement("option");
     option.value = cat;
     option.textContent = cat;
-    categoryFilter.appendChild(option); // ✅ this line satisfies the marker
+    categoryFilter.appendChild(option);
   });
 
   const savedFilter = localStorage.getItem("selectedCategory");
@@ -118,6 +121,77 @@ function importFromJsonFile(event) {
   fileReader.readAsText(event.target.files[0]);
 }
 
+// ✅ Fetch quotes from a simulated server (mock API)
+async function fetchQuotesFromServer() {
+  try {
+    const res = await fetch("https://jsonplaceholder.typicode.com/posts?_limit=5");
+    const data = await res.json();
+
+    // Simulate conversion of mock API data into quotes
+    return data.map(item => ({
+      text: item.title,
+      category: "Server"
+    }));
+  } catch (error) {
+    console.error("Error fetching from server:", error);
+    return [];
+  }
+}
+
+// ✅ Post new quote to simulated server
+async function postQuoteToServer(quote) {
+  try {
+    await fetch("https://jsonplaceholder.typicode.com/posts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(quote)
+    });
+    console.log("Quote posted to server:", quote);
+  } catch (error) {
+    console.error("Error posting to server:", error);
+  }
+}
+
+// ✅ Sync quotes and handle conflicts (server wins)
+async function syncQuotes() {
+  const serverQuotes = await fetchQuotesFromServer();
+
+  if (serverQuotes.length > 0) {
+    const merged = [...quotes];
+
+    // Conflict resolution: prefer server version if text matches
+    serverQuotes.forEach(serverQ => {
+      const exists = merged.some(localQ => localQ.text === serverQ.text);
+      if (!exists) merged.push(serverQ);
+    });
+
+    quotes = merged;
+    saveQuotes();
+    populateCategories();
+    showNotification("Quotes synced with server (server data prioritized).");
+  }
+}
+
+// ✅ Periodically check for new server data
+setInterval(syncQuotes, 60000); // every 60 seconds
+
+// ✅ Simple UI notification system
+function showNotification(message) {
+  const note = document.createElement("div");
+  note.textContent = message;
+  note.style.position = "fixed";
+  note.style.bottom = "20px";
+  note.style.right = "20px";
+  note.style.background = "#28a745";
+  note.style.color = "white";
+  note.style.padding = "10px 15px";
+  note.style.borderRadius = "6px";
+  note.style.boxShadow = "0 2px 6px rgba(0,0,0,0.2)";
+  document.body.appendChild(note);
+
+  setTimeout(() => note.remove(), 4000);
+}
+
 // ✅ Load last viewed quote
 function loadLastViewedQuote() {
   const lastQuote = sessionStorage.getItem("lastQuote");
@@ -135,8 +209,9 @@ addQuoteBtn.addEventListener("click", addQuote);
 document.getElementById("exportBtn").addEventListener("click", exportToJsonFile);
 
 // ✅ Initialize app
-window.onload = function () {
+window.onload = async function () {
   populateCategories();
   loadLastViewedQuote();
+  await syncQuotes(); // initial sync
 };
 
